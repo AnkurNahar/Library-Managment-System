@@ -22,9 +22,9 @@ const bookSchema = new Schema({
         type: Date,
         default: '',
       },
-      deactivated: {
+      isActive: {
         type: Boolean,
-        default: false
+        default: true
       }
 });
 

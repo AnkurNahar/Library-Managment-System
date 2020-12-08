@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const userservice = {
   //to generate acccess token
   generateAccessToken: function (user) {
-    const token = jwt.sign(user, "secret", { expiresIn: "30d" });
+    const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: "30d" });
     return token;
   },
 
@@ -18,6 +18,34 @@ const userservice = {
     const hash = bcrypt.hashSync(user.password, salt);
     return hash;
   },
+
+  isLibrarian: async function (userId) {
+    try {
+      const user = await UserList.query().findOne({ _id: userId });
+      return { status: 200, librarian: user.librarian};
+    } catch {
+        return { status: 500};
+    }
+  },
+
+  isLoggedIn: async function (userId) {
+    try {
+      const user = await UserList.query().findOne({ _id: userId });
+      return { status: 200, loginStatus: user.loginStatus };
+    } catch {
+        return { status: 500};
+    }
+  },
+
+  verifyAuthToken: async function (token) {
+
+    try {
+        const decode = jwt.verify(token, process.env.JWT_SECRET);
+        return { tokenValid: true, data: decode };
+    } catch {
+        return { tokenValid: false };
+    }
+},
 
   loginUser: async function (userData) {
     try {
@@ -70,7 +98,7 @@ const userservice = {
       const email = await UserList.query().findOne({ email: user.email });
       return email;
     } catch {
-        return { status: 500, msg: "Internal server error!" };
+        return { status: 500};
     }
   },
 
@@ -79,7 +107,9 @@ const userservice = {
 
         //check for duplicate email
         const email = this.checkForEmail(user.email);
-        if(email) {
+        if( email.status ) {
+          return { status: 500, msg: "Internal server error!" };
+        }else if( email ) {
             return { status: 400, msg: 'Email already in use' };
         }
 
@@ -87,7 +117,7 @@ const userservice = {
           const hash = this.encryptPassword(user.password)
 
           //adding user
-          if(user.librarian) {
+          if( user.librarian ) {
             await UserList.insertOne({
                 userName: user.userName, 
                 email: user.email,

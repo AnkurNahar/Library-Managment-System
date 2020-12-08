@@ -1,6 +1,15 @@
 const Book = require('../models/book');
 
 const bookservice = {
+
+    isBookActive: async function (bookId) {
+        try {
+          const book = await Book.query().findOne({ _id: bookId });
+          return { status: 200, activeStatus: book.isActive };
+        } catch {
+            return { status: 500};
+        }
+      },
   
     addBook: async function (bookData) {
         try {
