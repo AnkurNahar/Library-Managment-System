@@ -21,6 +21,10 @@ const bookSchema = new Schema({
       release: {
         type: Date,
         default: '',
+      },
+      deactivated: {
+        type: Boolean,
+        default: false
       }
 });
 

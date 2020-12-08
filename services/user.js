@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const UserList = require('../models/User');
+const UserList = require('../models/user');
 const bcrypt = require("bcrypt");
 
 const userservice = {
@@ -47,7 +47,7 @@ const userservice = {
 
         const accessToken = this.generateAccessToken({payload});
         //update status logged in
-        await this.updateLoginStatus(user._id);
+        await this.updateLoginStatus( user._id );
 
       return { status: 200, accessToken: accessToken};
     } catch (err) {
