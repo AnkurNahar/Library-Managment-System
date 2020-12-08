@@ -15,10 +15,15 @@ const userSchema = new Schema({
         type: String,
         required: true,
       },
-      lib: {
+      librarian: {
         type: Boolean,
         default: false
+      },
+      loginStatus: {
+        type: Boolean,
+        default: false,
       }
+      
 });
 
 const Users = mongoose.model('User', userSchema);
