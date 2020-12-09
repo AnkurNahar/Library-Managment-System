@@ -8,7 +8,7 @@ const addBook = async (req, res) => {
 
 const deleteBook = async (req, res) => {
 
-    const resInfo = await bookService.deleteBook(req.body);
+    const resInfo = await bookService.deleteBook(req.body.bookId);
     return res.status(resInfo.status).json(resInfo);
 }
 
@@ -20,7 +20,7 @@ const updateBookRecord = async (req, res) => {
 
 const getBook = async (req, res) => {
 
-    const resInfo = await bookService.getBook(req.body);
+    const resInfo = await bookService.getBook(req.body.bookId);
     return res.status(resInfo.status).json(resInfo);
 }
 
@@ -32,13 +32,13 @@ const getBooks = async (req, res) => {
 
 const activateBook = async (req, res) => {
 
-    const resInfo = await bookService.activateBook(req.body);
+    const resInfo = await bookService.activateBook(req.body.bookId);
     return res.status(resInfo.status).json(resInfo);
 }
 
 const deactivateBook = async (req, res) => {
 
-    const resInfo = await bookService.deactivateBook(req.body);
+    const resInfo = await bookService.deactivateBook(req.body.bookId);
     return res.status(resInfo.status).json(resInfo);
 }
 

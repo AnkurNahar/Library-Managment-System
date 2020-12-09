@@ -45,7 +45,7 @@ async function authenticateToken(req, res, next) {
     if( isActive.status !== 200 ){
         return res.status(500).json({msg: "Internal server error occured"});
     }
-    if( !isActive.isActive ){
+    if( isActive == null || !isActive.activeStatus ){
         return res.status(404).json({msg: "Book not available"});
     }
     return next();
