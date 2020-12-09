@@ -2,37 +2,41 @@ const userService = require('../../services/user');
 const bookService = require('../../services/book');
 
 async function isLibrarian(req, res, next) {
-    const isLibrarian = await userService.isLibrarian(req.userId);
-    if( isLibrarian.status !== 200 ){
+    const librarian = await userService.isLibrarian(req.userId);
+    if( librarian.status !== 200 ){
         return res.status(500).json({msg: "Internal server error occured"});
     }
-    if( !isLibrarian.librarian ){
+    if( !librarian.librarian ){
         return res.status(401).json({msg: "Unauthorized Action"});
     }
     return next();
   }
 
   async function isLoggedIn(req, res, next) {
-    const isLibrarian = await userService.isLibrarian(req.userId);
-    if( isLibrarian.status !== 200 ){
+    const loggedIn = await userService.isLoggedIn(req.userId);
+    if( loggedIn.status !== 200 ){
         return res.status(500).json({msg: "Internal server error occured"});
     }
-    if( !isLibrarian.librarian ){
-        return res.status(401).json({msg: "Unauthorized Action"});
+    if( !loggedIn.loginStatus ){
+        return res.status(401).json({msg: "Not Logged In"});
     }
     return next();
   }
 
   //to verify access token
-function authenticateToken(req, res, next) {
+async function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization']
   const token = authHeader && authHeader.split(' ')[1]
   if (token == null) return res.status(401).json({msg: "Unauthorized Action"});
 
-  const data = userService.verifyAuthToken(token);
+  const data = await userService.verifyAuthToken(token);
   if(!data.tokenValid){
     return res.status(401).json({msg: "Unauthorized Action"});
   }
+  req.userId = data.data.payload.id;
+  req.email = data.data.payload.email;
+  req.username = data.data.payload.username;
+  req.librarian = data.data.payload.librarian;
   return next();
 }
 

@@ -12,7 +12,7 @@ const userRoutes = (app) => {
 
     router.post('/signup', sanitizeForm, validateSignUp, userControllers.signupUser);
 
-    router.delete('/logout', authenticateToken, isLoggedIn, userControllers.logoutUser);
+    router.post('/logout', authenticateToken, isLoggedIn, userControllers.logoutUser);
 
     app.use('/users', router);
 }

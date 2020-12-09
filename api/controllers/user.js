@@ -14,8 +14,8 @@ const signupUser = async (req, res) => {
 
 const logoutUser = async (req, res) => {
 
-    const userLogout = await userService.logoutUser(req.body);
-    return res.status(userLogout.status);
+    const userLogout = await userService.logoutUser(req.userId);
+    return res.status(userLogout.status).json(userLogout);
 }
 
 

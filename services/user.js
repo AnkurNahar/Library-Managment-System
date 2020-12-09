@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const UserList = require('../models/user');
 const bcrypt = require("bcrypt");
 
+
 const userservice = {
   //to generate acccess token
   generateAccessToken: function (user) {
@@ -21,7 +22,7 @@ const userservice = {
 
   isLibrarian: async function (userId) {
     try {
-      const user = await UserList.query().findOne({ _id: userId });
+      const user = await UserList.findOne({ _id: userId });
       return { status: 200, librarian: user.librarian};
     } catch (err) {
         console.log(err);
@@ -31,11 +32,11 @@ const userservice = {
 
   isLoggedIn: async function (userId) {
     try {
-      const user = await UserList.query().findOne({ _id: userId });
+      const user = await UserList.findOne({ _id: userId });
       return { status: 200, loginStatus: user.loginStatus };
     } catch (err) {
         console.log(err);
-        return { status: 500};
+        return { status: 500, msg: err};
     }
   },
 
@@ -89,6 +90,7 @@ const userservice = {
 
   logoutUser: async function (userId) {
     try {
+        console.log(userId);
         await UserList.updateOne({_id: userId}, {loginStatus: false})
         return { status: 200, message: "Logged Out Successfully"  };
     } catch (err) {
@@ -97,13 +99,13 @@ const userservice = {
     }
   },
 
-  checkForEmail: async function (user) {
+  checkForEmail: async function (userEmail) {
     try {
-      const email = await UserList.query().findOne({ email: user.email });
+      const email = await UserList.findOne({ email: userEmail });
       return email;
     } catch (err) {
         console.log(err);
-        return { status: 500};
+        return err;
     }
   },
 
@@ -111,27 +113,30 @@ const userservice = {
     try {
 
         //check for duplicate email
-        const email = this.checkForEmail(user.email);
-        if( email.status ) {
-          return { status: 500, msg: "Internal server error!" };
-        }else if( email ) {
+        const email = await this.checkForEmail(user.email);
+        if(email !== null){
+          if( email.email === user.email) {
             return { status: 400, msg: 'Email already in use' };
+          } else {
+            return { status: 500, msg: "Internal server error!" };
+          }
         }
+       
 
           //encrypt password
           const hash = this.encryptPassword(user.password)
 
           //adding user
           if( user.librarian ) {
-            await UserList.insertOne({
-                userName: user.userName, 
+            await UserList.create({
+                username: user.username, 
                 email: user.email,
                 password: hash,
                 librarian: true
             });
           } else {
-            await UserList.insertOne({
-                userName: user.userName, 
+            await UserList.create({
+                username: user.username, 
                 email: user.email,
                 password: hash
             });

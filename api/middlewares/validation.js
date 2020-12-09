@@ -22,7 +22,7 @@ const signUpSchema = joi.object({
     email: joi.string().email().required()
         .error(() => "Invalid Email!"),
     password: joi.string().min(8).required()
-        .error(() => "Invalid Password!"),
+        .error(() => "Invalid Password! Password must have 8 characters"),
     librarian: joi.boolean()
         .error(() => "Invalid Status!"),
 });
