@@ -6,7 +6,8 @@ const bookservice = {
         try {
           const book = await Book.query().findOne({ _id: bookId });
           return { status: 200, activeStatus: book.isActive };
-        } catch {
+        } catch (err) {
+            console.log(err);
             return { status: 500};
         }
       },
@@ -16,6 +17,7 @@ const bookservice = {
             await Book.insertOne( bookData )
             return { status: 200, message: "Book Added Successfully" };
         } catch (err) {
+          console.log(err);
           return { status: 500, msg: "Internal server error!" };
         }
       },
@@ -25,6 +27,7 @@ const bookservice = {
             await Book.updateOne( {_id: bookId}, updateData )
             return { status: 200, message: "Book Updated Successfully" };
         } catch (err) {
+          console.log(err);
           return { status: 500, msg: "Internal server error!" };
         }
       },
@@ -34,6 +37,7 @@ const bookservice = {
             await Book.deleteOne( {_id: bookId} )
             return { status: 200, message: "Book Deleted Successfully" };
         } catch (err) {
+          console.log(err);
           return { status: 500, msg: "Internal server error!" };
         }
       },
@@ -43,6 +47,7 @@ const bookservice = {
             const book = await Book.findOne( bookData )
             return { status: 200, book};
         } catch (err) {
+          console.log(err);
           return { status: 500, msg: "Internal server error!" };
         }
       },
@@ -52,6 +57,7 @@ const bookservice = {
             const books = await Book.find({});
             return { status: 200, books};
         } catch (err) {
+          console.log(err);
           return { status: 500, msg: "Internal server error!" };
         }
       },

@@ -15,7 +15,7 @@ const userservice = {
 
   encryptPassword: function (password) {
     const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(user.password, salt);
+    const hash = bcrypt.hashSync(password, salt);
     return hash;
   },
 
@@ -23,7 +23,8 @@ const userservice = {
     try {
       const user = await UserList.query().findOne({ _id: userId });
       return { status: 200, librarian: user.librarian};
-    } catch {
+    } catch (err) {
+        console.log(err);
         return { status: 500};
     }
   },
@@ -32,7 +33,8 @@ const userservice = {
     try {
       const user = await UserList.query().findOne({ _id: userId });
       return { status: 200, loginStatus: user.loginStatus };
-    } catch {
+    } catch (err) {
+        console.log(err);
         return { status: 500};
     }
   },
@@ -42,7 +44,8 @@ const userservice = {
     try {
         const decode = jwt.verify(token, process.env.JWT_SECRET);
         return { tokenValid: true, data: decode };
-    } catch {
+    } catch (err) {
+        console.log(err);
         return { tokenValid: false };
     }
 },
@@ -79,8 +82,8 @@ const userservice = {
 
       return { status: 200, accessToken: accessToken};
     } catch (err) {
-      console.log(err);
-      return { status: 500, msg: "Internal server error!" };
+        console.log(err);
+        return { status: 500, msg: "Internal server error!" };
     }
   },
 
@@ -89,7 +92,8 @@ const userservice = {
         await UserList.updateOne({_id: userId}, {loginStatus: false})
         return { status: 200, message: "Logged Out Successfully"  };
     } catch (err) {
-      return { status: 500, msg: "Internal server error!" };
+        console.log(err);
+        return { status: 500, msg: "Internal server error!" };
     }
   },
 
@@ -97,7 +101,8 @@ const userservice = {
     try {
       const email = await UserList.query().findOne({ email: user.email });
       return email;
-    } catch {
+    } catch (err) {
+        console.log(err);
         return { status: 500};
     }
   },
@@ -135,8 +140,8 @@ const userservice = {
         return { status: 200, success: true, msg: 'Registration Successful!'};
 
     } catch (err) {
-      console.log(err);
-      return { status: 500, msg: "Internal server error!" };
+        console.log(err);
+        return { status: 500, msg: "Internal server error!" };
     }
   },
 
