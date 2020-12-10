@@ -32,13 +32,13 @@ const getBooks = async (req, res) => {
 
 const activateBook = async (req, res) => {
 
-    const resInfo = await bookService.activateBook(req.body.bookId);
+    const resInfo = await bookService.updateBook(req.body.bookId, {isActive: true});
     return res.status(resInfo.status).json(resInfo);
 }
 
 const deactivateBook = async (req, res) => {
 
-    const resInfo = await bookService.deactivateBook(req.body.bookId);
+    const resInfo = await bookService.updateBook(req.body.bookId, {isActive: false});
     return res.status(resInfo.status).json(resInfo);
 }
 
