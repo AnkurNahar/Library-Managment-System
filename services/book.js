@@ -33,26 +33,6 @@ const bookservice = {
         }
       },
 
-      activateBook: async function (bookId) {
-        try {
-            await Book.updateOne( {_id: bookId}, {isActive: true} )
-            return { status: 200, message: "Book Activated Successfully" };
-        } catch (err) {
-          console.log(err);
-          return { status: 500, msg: "Internal server error!" };
-        }
-      },
-
-      deactivateBook: async function (bookId) {
-        try {
-            await Book.updateOne( {_id: bookId}, {isActive: false} )
-            return { status: 200, message: "Book Deactivated Successfully" };
-        } catch (err) {
-          console.log(err);
-          return { status: 500, msg: "Internal server error!" };
-        }
-      },
-
       deleteBook: async function (bookId) {
         try {
             await Book.deleteOne( {_id: bookId} )
